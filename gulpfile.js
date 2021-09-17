@@ -26,35 +26,33 @@ const path = {
   // Исходные файлы. С этими файлами мы будем работать
   src: {
     html: srcPath + "*.html",
-    js: srcPath + "assets/js/*.js",
-    css: srcPath + "assets/scss/**/*.scss",
+    js: srcPath + "js/*.js",
+    css: srcPath + "scss/**/*.scss",
     images:
-      srcPath +
-      "assets/img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
-    fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+      srcPath + "img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+    fonts: srcPath + "fonts/**/*.{eot,woff,woff2,ttf,svg}",
   },
   // В эти папки будут собираться файлы
   build: {
     html: distPath,
-    js: distPath + "assets/js/",
-    css: distPath + "assets/css/",
-    images: distPath + "assets/img/",
-    fonts: distPath + "assets/fonts/",
+    js: distPath + "js/",
+    css: distPath + "css/",
+    images: distPath + "img/",
+    fonts: distPath + "fonts/",
   },
   // За этими файлами мы будем следить. При изменении этих файлов бдет перезагружаться браузер
   watch: {
     html: srcPath + "*.html",
-    js: srcPath + "assets/js/*.js",
-    css: srcPath + "assets/scss/**/*.scss",
-    images:
-      srcPath + "assets/img/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
-    fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+    js: srcPath + "js/*.js",
+    css: srcPath + "scss/**/*.scss",
+    images: srcPath + "img/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+    fonts: srcPath + "fonts/**/*.{eot,woff,woff2,ttf,svg}",
   },
   clean: "./" + distPath,
 };
 
 // Если нужно выполнять преобразование файлов в определенном порядке, то используем массив с нужным нам порядком:
-const jsFiles = [srcPath + "assets/js/*.js"];
+const jsFiles = [srcPath + "js/*.js"];
 
 // TASKS
 // объявляем функции под сборки (все пути относительные)
@@ -83,7 +81,7 @@ function html(cb) {
 
 // CSS
 function css(cb) {
-  return src(srcPath + "assets/scss/style.scss") // return src(path.src.css, {base: srcPath + 'assets/scss/'})
+  return src(srcPath + "scss/main.scss") // return src(path.src.css, {base: srcPath + 'scss/'})
     .pipe(sourcemaps.init())
     .pipe(
       plumber({
@@ -107,7 +105,7 @@ function css(cb) {
       })
     )
     .pipe(cssbeautify())
-    .pipe(concat("style.css"))
+    .pipe(concat("main.css"))
     .pipe(dest(path.build.css))
     .pipe(
       cssnano({
@@ -133,7 +131,7 @@ function css(cb) {
 
 // Для быстрой компиляции CSS во время разработки
 function cssWatch(cb) {
-  return src(srcPath + "assets/scss/style.scss") // если нужно компилировать 1 файл, то return src(srcPath + 'assets/scss/main.scss')
+  return src(srcPath + "scss/main.scss") // если нужно компилировать 1 файл, то return src(srcPath + 'scss/main.scss')
     .pipe(sourcemaps.init())
     .pipe(
       plumber({
@@ -151,7 +149,7 @@ function cssWatch(cb) {
         includePaths: "./node_modules/",
       })
     )
-    .pipe(concat("style.css"))
+    .pipe(concat("main.css"))
     .pipe(
       rename({
         suffix: ".min",
@@ -168,7 +166,7 @@ function cssWatch(cb) {
 // JS
 function js(cb) {
   return (
-    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'assets/js/'})
+    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'js/'})
       .pipe(sourcemaps.init())
       .pipe(
         plumber({
@@ -196,7 +194,7 @@ function js(cb) {
 // Для быстрой компиляции JS во время разработки
 function jsWatch(cb) {
   return (
-    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'assets/js/'})
+    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'js/'})
       .pipe(sourcemaps.init())
       .pipe(
         plumber({
