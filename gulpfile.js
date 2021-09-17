@@ -1,371 +1,290 @@
-const gulp = require('gulp'),
-    pug = require('gulp-pug'),
-    del = require('del'),
-    plumber = require('gulp-plumber'),
-    rename = require('gulp-rename'),
-    concat = require('gulp-concat'),
-    htmlhint = require('gulp-htmlhint'),
-    htmlmin = require('gulp-htmlmin'),
-    sass = require('gulp-sass')(require('sass'));
-autoprefixer = require('gulp-autoprefixer'),
-    gcmq = require('gulp-group-css-media-queries'),
-    sourcemaps = require('gulp-sourcemaps'),
-    cleanCSS = require('gulp-clean-css'),
-    imagemin = require('gulp-imagemin'),
-    imgCompress = require('imagemin-jpeg-recompress'),
-    imageminPngquant = require('imagemin-pngquant'),
-    newer = require('gulp-newer'),
-    svgSprite = require('gulp-svg-sprite'),
-    svgmin = require('gulp-svgmin'),
-    cheerio = require('gulp-cheerio'),
-    replace = require('gulp-replace'),
-    webp = require('gulp-webp'),
-    browserSync = require('browser-sync').create(),
-    webpack = require('webpack-stream');
+"use strict";
 
+// Подключаем модули
+const { src, dest } = require("gulp");
+const gulp = require("gulp");
+const sourcemaps = require("gulp-sourcemaps"); // благодаря ему в браузере видим не минифицированный код, а привычную разметку
+const autoprefixer = require("gulp-autoprefixer"); // расставляет префиксы для поддержки свойств в разных браузерах
+const cssbeautify = require("gulp-cssbeautify"); // форматирует css, чтобы он был легким для чтения
+const removeComments = require("gulp-strip-css-comments"); // удаляет комментарии
+const rename = require("gulp-rename"); // для переименования файлов
+const sass = require("gulp-sass"); // для компиляции sass в css
+const cssnano = require("gulp-cssnano"); //для минификации css
+const uglify = require("gulp-uglify"); // для минификации (сжатия) js-кода. Обратного преобразования нет.
+const concat = require("gulp-concat"); //"склеивает" несколько файлов в один
+const plumber = require("gulp-plumber"); // для обработки ошибок
+const imagemin = require("gulp-imagemin"); //для минификации изображений
+const del = require("del"); // для удаления файлов и папок
+const notify = require("gulp-notify"); //предоставляет информацию об ошибке
+const browserSync = require("browser-sync").create(); // для запуска сервера и перезагрузки страницы при внесении изменений
 
-/* FILES PATHS */
+// Пути
+const srcPath = "src/";
+const distPath = "dist/";
 
-// Project info
-
-const buildFolder = './build';
-
-/*
-* Название текущего проекта 
-* (необходимо прописать его также в ссылках на js, css и fonts файлы в файлах footer и head в папке layouts)
-*/
-const projectName = 'factory_windows';
-
-const themePath = `${buildFolder}/wp-content/themes/${projectName}/assets/`; // For wordpress
-// const themePath = `${buildFolder}`; // For other cases
-const htmlMin = false; // HTML minification (false by default)
-
-const paths = {
-    prod: {
-        build: `${buildFolder}`
-    },
-    pug: {
-        src: './src/pages/*.pug',
-        dest: `${buildFolder}`,
-        watch: ['./src/components/**/*.pug', './src/mixins-pug/**/*.pug', './src/pages/**/*.pug', './src/layouts/**/*.pug']
-    },
-    scss: {
-        src: './src/scss/main.scss',
-        dest: `${themePath}/css`,
-        watch: ['./src/scss/**/*.scss', './src/components/**/*.scss']
-    },
-    js: {
-        src: './src/js/index.js',
-        dest: `${themePath}/js`,
-        watch: './src/js/**/*.js'
-    },
-    images: {
-        src: ['./src/img/**/*', '!./src/img/**/*.svg', '!./src/img/**/*.webp'],
-        dest: `${themePath}/img`,
-        watch: ['./src/img/**/*', '!./src/img/**/*.svg', '!./src/img/**/*.webp']
-    },
-    webpImages: {
-        src: './src/img/**/*.webp',
-        dest: `${themePath}/img`,
-        watch: './src/img/**/*.webp'
-    },
-    svgSprite: {
-        src: './src/img/icons/**/*.svg',
-        dest: `${themePath}/img/icons`,
-        watch: './src/img/icons/**/*.svg'
-    },
-    svg: {
-        src: ['./src/img/**/*.svg', '!./src/img/icons/**/*.svg'],
-        dest: `${themePath}/img/icons`,
-        watch: ['./src/img/**/*.svg', '!./src/img/icons/**/*.svg']
-    },
-    fonts: {
-        src: './src/fonts/**/*',
-        dest: `${themePath}/fonts`,
-        watch: './src/fonts/**/*'
-    },
-    php: {
-        src: './src/php/**/*.php',
-        dest: `${themePath}/php`,
-        watch: './src/php/**/*.php'
-    },
-    video: {
-        src: './src/video/**/*.*',
-        dest: `${themePath}/video`,
-        watch: './src/video/**/*.*'
-    }
+const path = {
+  // Исходные файлы. С этими файлами мы будем работать
+  src: {
+    html: srcPath + "*.html",
+    js: srcPath + "assets/js/*.js",
+    css: srcPath + "assets/scss/**/*.scss",
+    images:
+      srcPath +
+      "assets/img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+    fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+  },
+  // В эти папки будут собираться файлы
+  build: {
+    html: distPath,
+    js: distPath + "assets/js/",
+    css: distPath + "assets/css/",
+    images: distPath + "assets/img/",
+    fonts: distPath + "assets/fonts/",
+  },
+  // За этими файлами мы будем следить. При изменении этих файлов бдет перезагружаться браузер
+  watch: {
+    html: srcPath + "*.html",
+    js: srcPath + "assets/js/*.js",
+    css: srcPath + "assets/scss/**/*.scss",
+    images:
+      srcPath + "assets/img/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+    fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+  },
+  clean: "./" + distPath,
 };
 
-// Project build type (development or production)
-let isDev = true; // Оставить true для development или заменить на false для production версии сборки проекта
-let isProd = !isDev;
+// Если нужно выполнять преобразование файлов в определенном порядке, то используем массив с нужным нам порядком:
+const jsFiles = [srcPath + "assets/js/*.js"];
 
-/* 
-Название конечного js-файла для development или production версии сборки 
-Подключить соответствующее имя файла на нужных страницах (например, index.pug или index.html)
-*/
-let jsFilename = isDev ? 'main.js' : 'main.min.js';
+// TASKS
+// объявляем функции под сборки (все пути относительные)
 
-/* Webpack options */
-let webpackConfig = {
-    entry: {
-        main: './src/js/index.js',
+// Локальный сервер
+function serve() {
+  browserSync.init({
+    server: {
+      baseDir: "./" + distPath,
     },
-    output: {
-        filename: jsFilename
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: '/node_modules/', // Не обязательно (для вытягивания откомпелированного в babel кода из зависимостей)
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
-            }
-        ]
-    },
-    optimization: {
-        minimize: isProd
-    },
-    devServer: {
-        port: 4200,
-        overlay: true, // Вывод ошибки на оверлей на экране
-        open: true // Открытие проекта в браузере при запуске в development режиме
-    },
-    mode: isDev ? 'development' : 'production',
-    devtool: isDev ? 'source-map' : 'none'
-};
-
-/* TASKS */
-
-/* PUG TO HTML & MINIFICATION */
-
-gulp.task('pug', () => {
-    return gulp.src(paths.pug.src)
-        .pipe(plumber())
-        .pipe(pug({
-            pretty: true
-        }))
-        .pipe(htmlhint())
-        .pipe(htmlhint.reporter('htmlhint-stylish'))
-        .pipe(htmlhint.failOnError({
-            suppress: true
-        }))
-        .pipe(htmlmin({
-            collapseWhitespace: htmlMin  //Минификация html (по умолчанию отключена)
-        }))
-        .pipe(gulp.dest(paths.pug.dest))
-        .pipe(browserSync.stream())
-});
-
-/* SCSS TO CSS CONVERTATION & MINIFICATION */
-
-gulp.task('styles', () => {
-    return gulp.src(paths.scss.src)
-        .pipe(plumber())
-        .pipe(sourcemaps.init()) // Можно закомментировать создание карту при production сборке
-        .pipe(concat('main.scss'))
-        .pipe(sass({
-            includePaths: ['node_modules']
-        }))
-        .pipe(autoprefixer({
-            Browserslist: ['> 1%, not dead'],
-            cascade: false
-        }))
-        .pipe(gcmq())
-        .pipe(gulp.dest(paths.scss.dest))
-        .pipe(cleanCSS())
-        .pipe(rename('main.min.css'))
-        .pipe(sourcemaps.write('.')) // Можно закомментировать создание карту при production сборке
-        .pipe(gulp.dest(paths.scss.dest))
-        .pipe(browserSync.stream())
-});
-
-/* JAVASCRIPT MINIFICATION VIA WEBPACK */
-
-gulp.task('scripts', () => {
-    return gulp.src(paths.js.src)
-        .pipe(webpack(webpackConfig))
-        .pipe(gulp.dest(paths.js.dest))
-        .pipe(browserSync.stream())
-});
-
-/* IMAGES MINIFICATION */
-
-gulp.task('imgmin', () => {
-    return gulp.src(paths.images.src)
-        .pipe(plumber())
-        .pipe(newer(paths.images.dest))
-        .pipe(imagemin([
-            imgCompress({
-                loops: 4,
-                min: 70,
-                max: 80,
-                quality: 'high'
-            }),
-            imageminPngquant({ quality: [0.70, 0.80], speed: 4 }),
-        ]))
-        .pipe(gulp.dest(paths.images.dest))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
-});
-
-/* IMAGES JPG/JPEG & PNG TO WEBP CONVERTATION */
-
-gulp.task('webp', () => {
-    return gulp.src(paths.images.src)
-        .pipe(plumber())
-        .pipe(webp())
-        .pipe(gulp.dest(paths.images.dest))
-});
-
-/* SVG SPRITES */
-
-gulp.task('sprites', () => {
-    return gulp.src(paths.svgSprite.src)
-        .pipe(plumber())
-        .pipe(newer(paths.svgSprite.dest))
-        .pipe(svgmin({
-            js2svg: {
-                pretty: true
-            }
-        }))
-        .pipe(cheerio({
-            run: ($) => {
-                $('[fill]').removeAttr('fill');
-                $('[stroke]').removeAttr('stroke');
-                $('[style]').removeAttr('style');
-            },
-            parserOptions: {
-                xmlMode: true
-            }
-        }))
-        .pipe(replace('&gt;', '>'))
-        .pipe(svgSprite({
-            mode: {
-                symbol: {
-                    sprite: '../sprite.svg'
-                }
-            }
-        }))
-        .pipe(gulp.dest(paths.svgSprite.dest))
-});
-
-/* SVG MINIFICATION */
-
-gulp.task('svg', () => {
-    return gulp.src(paths.svg.src)
-        .pipe(plumber())
-        .pipe(newer(paths.svg.dest))
-        .pipe(svgmin({
-            js2svg: {
-                pretty: true
-            }
-        }))
-        .pipe(gulp.dest(paths.svg.dest))
-});
-
-/* FONTS MOVING TO BUILD */
-
-gulp.task('fonts', () => {
-    return gulp.src(paths.fonts.src)
-        .pipe(plumber())
-        .pipe(newer(paths.fonts.dest))
-        .pipe(gulp.dest(paths.fonts.dest))
-});
-
-/* PHP MOVING TO BUILD */
-
-gulp.task('php', () => {
-    return gulp.src(paths.php.src)
-        .pipe(plumber())
-        // .pipe(newer(paths.php.dest))
-        .pipe(gulp.dest(paths.php.dest))
-});
-
-/* VIDEO MOVING TO BUILD */
-
-gulp.task('video', () => {
-    return gulp.src(paths.video.src)
-        .pipe(plumber())
-        .pipe(newer(paths.video.dest))
-        .pipe(gulp.dest(paths.video.dest))
-});
-
-/* BUILD FOLDER ERASE */
-
-gulp.task('clean', () => {
-    return del(paths.prod.build);
-});
-
-/* BROWSER SYNC */
-
-function reload(done) {
-    browserSync.reload({ stream: true });
-    done();
+  });
 }
 
-gulp.task('server', () => {
-    browserSync.init({
-        server: {
-            baseDir: paths.prod.build
+// HTML
+function html(cb) {
+  return (
+    src(path.src.html, { base: srcPath })
+      //.pipe() - Это 1 конкретное действие, которое мы хотим совершить над нашими файлами.
+      .pipe(plumber())
+      .pipe(dest(path.build.html))
+      .pipe(browserSync.reload({ stream: true }))
+  );
+
+  cb();
+}
+
+// CSS
+function css(cb) {
+  return src(srcPath + "assets/scss/style.scss") // return src(path.src.css, {base: srcPath + 'assets/scss/'})
+    .pipe(sourcemaps.init())
+    .pipe(
+      plumber({
+        errorHandler: function (err) {
+          notify.onError({
+            title: "SCSS Error",
+            message: "Error: <%= error.message %>",
+          })(err);
+          this.emit("end");
         },
-        reloadOnRestart: true
-    });
-    gulp.watch(paths.pug.watch, gulp.series('pug', reload));
-    gulp.watch(paths.scss.watch, gulp.series('styles', reload))
-    gulp.watch(paths.js.watch, gulp.series('scripts', reload));
-    gulp.watch(paths.images.watch, gulp.series('imgmin', reload));
-    gulp.watch(paths.images.watch, gulp.series('webp', reload));
-    gulp.watch(paths.svgSprite.watch, gulp.series('sprites', reload));
-    gulp.watch(paths.svg.watch, gulp.series('svg', reload));
-    gulp.watch(paths.fonts.watch, gulp.series('fonts', reload));
-    gulp.watch(paths.php.watch, gulp.series('php', reload));
-    gulp.watch(paths.video.watch, gulp.series('video', reload));
-});
+      })
+    )
+    .pipe(
+      sass({
+        includePaths: "./node_modules/",
+      })
+    )
+    .pipe(
+      autoprefixer({
+        cascade: true,
+      })
+    )
+    .pipe(cssbeautify())
+    .pipe(concat("style.css"))
+    .pipe(dest(path.build.css))
+    .pipe(
+      cssnano({
+        zindex: false,
+        discardComments: {
+          removeAll: true,
+        },
+      })
+    )
+    .pipe(removeComments())
+    .pipe(
+      rename({
+        suffix: ".min",
+        extname: ".css",
+      })
+    )
+    .pipe(sourcemaps.write("."))
+    .pipe(dest(path.build.css))
+    .pipe(browserSync.reload({ stream: true }));
 
-/* PROJECT TASK DEVELOPMENT QUEUE */
+  cb();
+}
 
-gulp.task('dev', gulp.series(
-    'pug',
-    'styles',
-    'scripts',
-    'imgmin',
-    'webp',
-    'sprites',
-    'svg',
-    'fonts',
-    'php',
-    'video'
-));
+// Для быстрой компиляции CSS во время разработки
+function cssWatch(cb) {
+  return src(srcPath + "assets/scss/style.scss") // если нужно компилировать 1 файл, то return src(srcPath + 'assets/scss/main.scss')
+    .pipe(sourcemaps.init())
+    .pipe(
+      plumber({
+        errorHandler: function (err) {
+          notify.onError({
+            title: "SCSS Error",
+            message: "Error: <%= error.message %>",
+          })(err);
+          this.emit("end");
+        },
+      })
+    )
+    .pipe(
+      sass({
+        includePaths: "./node_modules/",
+      })
+    )
+    .pipe(concat("style.css"))
+    .pipe(
+      rename({
+        suffix: ".min",
+        extname: ".css",
+      })
+    )
+    .pipe(sourcemaps.write("."))
+    .pipe(dest(path.build.css))
+    .pipe(browserSync.reload({ stream: true }));
 
-gulp.task('prod', gulp.series(
-    'clean',
-    'pug',
-    'styles',
-    'scripts',
-    'imgmin',
-    'webp',
-    'sprites',
-    'svg',
-    'fonts',
-    'php',
-    'video'
-));
+  cb();
+}
 
-/* START DEVELOPMENT GULP */
+// JS
+function js(cb) {
+  return (
+    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'assets/js/'})
+      .pipe(sourcemaps.init())
+      .pipe(
+        plumber({
+          errorHandler: function (err) {
+            notify.onError({
+              title: "JS Error",
+              message: "Error: <%= error.message %>",
+            })(err);
+            this.emit("end");
+          },
+        })
+      )
+      .pipe(concat("script.js"))
+      // .pipe(uglify({ //расскомментируй, если надо будет минифицировать js
+      //     toplevel: true //(опция модуля uglify) - как сильно сжимать. Есть три уговня, это самый сильный.
+      // }))
+      .pipe(sourcemaps.write("."))
+      .pipe(dest(path.build.js))
+      .pipe(browserSync.reload({ stream: true }))
+  );
 
-gulp.task('default', gulp.series(
-    'dev', 'server'
-));
+  cb();
+}
 
-/* START PRODUCTION GULP */
+// Для быстрой компиляции JS во время разработки
+function jsWatch(cb) {
+  return (
+    src(jsFiles) // если порядок не важен, то берем все файлы: return src(path.src.js, {base: srcPath + 'assets/js/'})
+      .pipe(sourcemaps.init())
+      .pipe(
+        plumber({
+          errorHandler: function (err) {
+            notify.onError({
+              title: "JS Error",
+              message: "Error: <%= error.message %>",
+            })(err);
+            this.emit("end");
+          },
+        })
+      )
+      .pipe(concat("script.js"))
+      // .pipe(uglify({ //расскомментируй, если надо будет минифицировать js
+      //     toplevel: true //(опция модуля uglify) - как сильно сжимать. Есть три уговня, это самый сильный.
+      // }))
+      .pipe(sourcemaps.write("."))
+      .pipe(dest(path.build.js))
+      .pipe(browserSync.reload({ stream: true }))
+  );
 
-gulp.task('prod', gulp.series(
-    'prod', 'server'
-));
+  cb();
+}
+
+// Images
+function images(cb) {
+  return (
+    src(path.src.images)
+      .pipe(imagemin())
+      // .pipe(imagemin([
+      //     imagemin.gifsicle({interlaced: true}),
+      //     imagemin.mozjpeg({quality: 95, progressive: true}),
+      //     imagemin.optipng({optimizationLevel: 5}),
+      //     imagemin.svgo({
+      //         plugins: [
+      //             { removeViewBox: true },
+      //             { cleanupIDs: false }
+      //         ]
+      //     })
+      // ]))
+      .pipe(dest(path.build.images))
+      .pipe(browserSync.reload({ stream: true }))
+  );
+
+  cb();
+}
+
+// Fonts
+function fonts(cb) {
+  return src(path.src.fonts)
+    .pipe(dest(path.build.fonts))
+    .pipe(browserSync.reload({ stream: true }));
+
+  cb();
+}
+
+// При сборке проекта удаляет папку dist и создает новую со свежими файлами
+function clean(cb) {
+  return del(path.clean);
+  cb();
+}
+
+// Для слежки за файлами. Перезагрузит страницу, если что-то изменится
+function watchFiles() {
+  gulp.watch([path.watch.html], html);
+  gulp.watch([path.watch.css], cssWatch);
+  gulp.watch([path.watch.js], jsWatch);
+  gulp.watch([path.watch.images], images);
+  gulp.watch([path.watch.fonts], fonts);
+}
+
+const build = gulp.series(clean, gulp.parallel(html, css, js, images, fonts)); // Будет запускаться по команде gulp build
+const watch = gulp.series(build, gulp.parallel(watchFiles, serve)); // Будет запускаться по дефолтной команде gulp
+
+// Экспорты тасок
+exports.html = html;
+exports.css = css;
+exports.js = js;
+exports.images = images;
+exports.fonts = fonts;
+exports.clean = clean;
+exports.build = build;
+exports.watch = watch;
+exports.default = watch;
+
+// На сервер (или заказчику) пойдет только папка dist
+
+// Как юзать этот сборщик в другом проекте:
+// 1. B папку с новым проектом переносим файлы gulpfile.js, package.json и папку src;
+// 2. B консоли пишем npm install (установятся все нужные модули);
+// 3. Соблюдаем файловую структуру или в сборках подправляем пути "откуда берем"/"куда кладем" файлы.
