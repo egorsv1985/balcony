@@ -1,0 +1,67 @@
+h2 {
+    width: 100%;
+    font-family: "Anticva-Regular";
+    text-align: center;
+    font-style: normal;
+    font-weight: normal;
+    color: #609cb0;
+    font-size: 2.4rem;
+    line-height: 2.9rem;
+    margin-bottom: 3rem;
+    @media (min-width: 768px) {
+        font-size: 4rem;
+        line-height: 6rem;
+    }
+    @media (min-width: 1200px) {
+        font-size: 5rem;
+        line-height: 6rem;
+        margin-bottom: 7rem;
+    }
+}
+h3 {
+    font-family: "Nunito-Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.4rem;
+    line-height: 1.91rem;
+    color: #2f3b3f;
+    @media (min-width: 768px) {
+        font-size: 2.4rem;
+        line-height: 3.2rem;
+    }
+    @media (min-width: 1200px) {
+        font-size: 3.5rem;
+        line-height: 4.8rem;
+    }
+}
+h4 {
+    font-family: "Nunito-Regular";
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
+    color: #2f3b3f;
+    @media (min-width: 1024px) {
+        font-size: 2.4rem;
+        line-height: 3.3rem;
+    }
+    @media (min-width: 1200px) {
+        font-size: 3rem;
+        line-height: 4.1rem;
+    }
+}
+p {
+    font-family: "Nunito-Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+    color: #2f3b3f;
+    @media (min-width: 1024px) {
+        font-size: 2.2rem;
+        line-height: 3.2rem;
+    }
+    @media (min-width: 1200px) {
+        font-size: 2.4rem;
+    }
+}

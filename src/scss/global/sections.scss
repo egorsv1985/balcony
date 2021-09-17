@@ -1,0 +1,15 @@
+.ptb {
+    padding: 5rem 0;
+    @media (min-width: 1024px) {
+        padding: 10rem 0;
+    }
+    @media (min-width: 1024px) {
+        padding: 15rem 0;
+    }
+}
+.pb {
+    padding-bottom: 15rem;
+}
+.cf {
+    background: #f5fdff;
+}

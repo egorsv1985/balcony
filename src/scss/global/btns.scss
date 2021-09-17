@@ -1,0 +1,80 @@
+.btn,
+.btns {
+    width: 9.8rem;
+    border-radius: 5px;
+    border: none;
+    transition: all 0.3s;
+    z-index: 0;
+    font-family: "Roboto-Regular";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.8rem;
+    line-height: 0.9rem;
+    color: #ffffff;
+
+    position: relative;
+    @media (min-width: 768px) {
+        width: 24.7rem;
+        font-size: 2rem;
+        line-height: 2.3rem;
+    }
+    &::before,
+    &::after {
+        position: absolute;
+        content: "";
+        top: 0;
+        height: 100%;
+        border-radius: 5px;
+        transition: all 0.5s;
+    }
+    &::before {
+        width: 100%;
+        z-index: -1;
+        left: 0;
+    }
+    &::after {
+        width: 0%;
+        z-index: -1;
+    }
+    &:focus,
+    &:hover {
+        background: transparent;
+        transition: all 0.5s;
+        &::after {
+            width: 100%;
+            filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 0.25));
+            transform: scale(1);
+            transition: all 0.5s;
+        }
+    }
+}
+.btns {
+    background-color: transparent;
+    &::before {
+        background-color: #2f3b3f;
+    }
+    &::after {
+        right: 0;
+    }
+    &:focus,
+    &:hover {
+        &::after {
+            background-color: #116988;
+        }
+    }
+}
+.btn {
+    background-color: transparent;
+    &::before {
+        background-color: #116988;
+    }
+    &::after {
+        left: 0;
+    }
+    &:focus,
+    &:hover {
+        &::after {
+            background: #2f3b3f;
+        }
+    }
+}
