@@ -35,13 +35,13 @@
 // @import "./../components/sections/footer/footer";
 
 // БЭМ-блоки
-@import "./../components/bem-blocks/accordion/accordion"; // Аккордион
+// @import "./../components/bem-blocks/accordion/accordion"; // Аккордион
 // @import "./../components/bem-blocks/menu/menu-bottom"; // Нижнее меню, первый банер
 // @import "./../components/bem-blocks/menu/menu-top"; // Меню в шапке
 // @import "./../components/bem-blocks/svg-txt/svg-txt"; // 2 секция главная
 
 // Секции
-// @import "./../components/sections/banner-home/banner-home"; // Первый экран
+@import "./../components/sections/about/about"; // Первый экран
 // @import "./../components/sections/whyWe/whyWe"; // Почему мы
 // @import "./../components/sections/discounts/discounts"; // Рекордная скидка
 // @import "./../components/sections/aboutWindow/aboutWindow"; // О НАШИХ ОКНАХ
