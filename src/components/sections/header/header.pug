@@ -1,0 +1,20 @@
+header.header
+	.container
+		.header__wrapper
+			.header__logo
+			svg(width="45" height="45")
+				use(xlink:href="./wp-content/themes/factory_windows/assets/img/icons/sprite.svg#logo")
+			nav.header__menu
+				ul
+					li: a.active(href='') Главная
+					li: a.active(href='') Доставка и оплата
+					li: a.active(href='') Акции
+			form.header__form
+				label.header__label
+					input._req(type='text' value='' placeholder='')
+			button(type='button')
+				svg(width="45" height="45")
+					use(xlink:href="./wp-content/themes/factory_windows/assets/img/icons/sprite.svg#loupe")
+			button(type='button')
+				svg(width="45" height="45")
+					use(xlink:href="./wp-content/themes/factory_windows/assets/img/icons/sprite.svg#menu")
