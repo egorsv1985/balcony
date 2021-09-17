@@ -1,0 +1,27 @@
+.menu{
+    &__list{
+        display: flex;
+
+        &-item{
+            &:first-child{
+                margin-right: 59px;
+            }
+
+            &:last-child{
+                margin-left: 80px;
+            }
+        }
+
+        &-link{
+            @include text(16px, 700, 21px, $textColor);
+            padding: 2px 4px;
+            transition: $transition;
+            
+            &:hover{
+                @include text(16px, 700, 21px, $textColorLight);
+                border-radius: $borderRadius;
+                background-color: $textColor;
+            }
+        }
+    }
+}

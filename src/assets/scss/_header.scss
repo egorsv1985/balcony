@@ -1,0 +1,134 @@
+.header{
+    &__top{
+        margin-top: 16px;
+        
+        &-wrapper{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    &__right-block{
+        display: flex;
+        align-items: center;
+        gap: 76px;
+    }
+
+    &__logo{
+        @include text(20px, 700, 27px, $textColor);
+    }
+
+    &__find{
+        display: flex;
+        align-items: center;
+        padding: 0 4px;
+        height: 27px;
+        transition: $transition;
+
+        &:hover{
+            border-radius: $borderRadius;
+            background-color: $textColor;
+        }
+
+        &:hover &-img{
+            filter: brightness(10);
+        }
+    }
+
+    &__burger{
+        padding: 0 4px;
+        height: 27px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: $transition;
+
+        &:hover{
+            border-radius: $borderRadius;
+            background-color: $textColor;
+        }
+
+        &:hover &-img{
+            filter: brightness(10);
+        }
+
+        &-img{
+            width: 22px;
+            height: 20px;
+        }
+    }
+
+    &__content{
+        &-wrapper{
+            margin-top: 100px;
+            height: 594px;
+            position: relative;
+
+            &::before{
+                content: "";
+                display: block;
+                background-color: inherit;
+                width: 250px;
+                height: 89px;
+                border-radius: $borderRadiusButton;
+                border: 2px solid $accentColor;
+                position: absolute;
+                bottom: 0;
+                right: 625px;
+            }
+
+            &::after{
+                content: "";
+                display: block;
+                background-image: url('./../images/header.svg');
+                background-size: 852px 572px;
+                width: 852px;
+                height:  572px;
+                position: absolute;
+                top: 0%;
+                right: 0%;
+            }
+        }
+
+        &-button{
+            z-index: 1;
+            background-color: $accentColor;
+            border-radius: $borderRadiusButton;
+            border: none;
+            padding: 28px 79px;
+            @include text(24px, 700, 32px, $textColorLight);
+            cursor: pointer;
+            position: absolute;
+            right: -24px;
+            bottom: 0;
+        }
+    }
+
+    &__info{
+        position: absolute;
+        top: 123px;
+        left: -204px;
+        z-index: 1;
+        width: 643px;
+        height: 326px;
+        background-color: $accentColor;
+        border-radius: $borderRadius;
+        box-sizing: border-box;
+        padding: 41px 73px;
+        display: grid;
+        justify-content: end;
+
+        &-title{
+            @include text(47px, 700, 64px, $textColorLight);
+            width: 358px;
+        }
+
+        &-text{
+            @include text(40px, 700, 54px, $textColorLight);
+            width: 303px;
+            border-top: 1px solid $textColorLight;
+            padding-top: 19px;
+        }
+    }
+}
