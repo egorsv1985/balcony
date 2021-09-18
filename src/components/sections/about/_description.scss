@@ -23,6 +23,16 @@
     margin: 0;
     text-align: left;
     margin: 130px 0 70px 343px;
+    position: relative;
+  }
+  &__title::before {
+    content: "";
+    position: absolute;
+    background: url(../img/icons/line.svg);
+    top: 26px;
+    left: -176px;
+    width: 166px;
+    height: 2px;
   }
   &__text,
   &__text-next {
@@ -30,6 +40,9 @@
   }
   &__image {
     padding-left: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   &__text {
     margin-bottom: 30px;
@@ -107,6 +120,13 @@
     width: 44px;
     height: 16px;
     z-index: 22;
+  }
+  &__button--right:hover::after {
+    transform: translateX(15px);
+    -webkit-transform: translateX(15px);
+    -moz-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    -o-transform: translateX(15px);
   }
 
   &__wrapper {

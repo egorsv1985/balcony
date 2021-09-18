@@ -4,6 +4,16 @@
     margin: 0;
     text-align: left;
     margin: 153px 0 70px 343px;
+    position: relative;
+  }
+  &__title::before {
+    content: "";
+    position: absolute;
+    background: url(../img/icons/line.svg);
+    top: 26px;
+    left: -176px;
+    width: 166px;
+    height: 2px;
   }
   &__subtitle,
   &__item-title {
@@ -12,7 +22,21 @@
   &__item-text {
     @include text(400, 20px, 30px);
     margin-top: 40px;
+    position: relative;
   }
+
+  // &__item::after:not(:last-child)
+  &__item:nth-child(1)::after,
+  &__item:nth-child(2)::after {
+    content: "";
+    background: url(../img/icons/vertical.svg);
+    position: absolute;
+    width: 2px;
+    height: 106px;
+    left: -68px;
+    top: 70px;
+  }
+
   &__wrapper {
     margin: 0;
     display: grid;
@@ -23,11 +47,49 @@
   }
   &__list {
     margin-left: 98px;
+    max-width: 312px;
+    width: 100%;
   }
   &__image {
     padding-right: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    display: block;
   }
+  &__image::after {
+    content: "";
+    background: url(../img/icons/square.svg);
+    position: absolute;
+    width: 132px;
+    height: 132px;
+    left: 0;
+    bottom: 0;
+    z-index: 22;
+  }
+
   &__item {
     margin-top: 70px;
+    position: relative;
+  }
+  &__item:nth-child(1)::before,
+  &__item:nth-child(2)::before,
+  &__item:nth-child(3)::before {
+    content: "";
+    position: absolute;
+    width: 84px;
+    height: 84px;
+    left: -114px;
+    top: -28px;
+  }
+  &__item:nth-child(1)::before {
+    background: url(../img/icons/price.svg);
+  }
+  &__item:nth-child(2)::before {
+    background: url(../img/icons/guarantee.svg);
+  }
+  &__item:nth-child(3)::before {
+    background: url(../img/icons/care.svg);
   }
 }
