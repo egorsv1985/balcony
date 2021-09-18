@@ -1,0 +1,89 @@
+.footer{
+    background-color: #83AEAD;
+    padding-top: 141px;
+    padding-bottom: 112px;
+
+    &__wrapper{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__about{
+        &-title{
+            @include font(18px, 24px, 700);
+            color: #2F3B3F;
+            margin-bottom: 30px;
+        }
+
+        &-list{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        // &-item{
+
+        // }
+
+        &-link{
+            @include font(14px, 19px, 400);
+            color: #2F3B3F;
+            opacity: 0.8;
+        }
+    }
+
+    &__menu{
+        &-title{
+            @include font(18px, 24px, 700);
+            color: #2F3B3F;
+            margin-bottom: 30px;
+        }
+
+        &-list{
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        &-link{
+            @include font(14px, 19px, 400);
+            color: #2F3B3F;
+            opacity: 0.8;
+        }
+    }
+
+    &__contacts{
+        &-title{
+            @include font(18px, 24px, 700);
+            color: #2F3B3F;
+            margin-bottom: 30px;
+        }
+
+        &-list{
+            display: flex;
+            flex-direction: column;
+            gap: 21px;
+        }
+
+        &-link{
+            @include font(14px, 19px, 400);
+            color: #2F3B3F;
+            opacity: 0.8;
+        }
+    }
+}
+
+.socials{
+    &__title{
+        @include font(18px, 24px, 700);
+        color: #2F3B3F;
+        margin-bottom: 30px;
+    }
+
+    &__list{
+        display: flex;
+        justify-content: space-between;
+        gap: 54px;
+    }
+}
