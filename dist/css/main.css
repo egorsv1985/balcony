@@ -1104,7 +1104,6 @@ button.swiper-pagination-bullet {
 }
 
 .container {
-    padding: 0 147px;
     width: 100%;
     max-width: 1146px;
 }
@@ -1119,7 +1118,7 @@ button.swiper-pagination-bullet {
     line-height: 54px;
     margin: 0;
     text-align: left;
-    margin: 130px 0 70px 196px;
+    margin: 130px 0 70px 343px;
 }
 
 .description__text, .description__text-next {
@@ -1159,6 +1158,20 @@ button.swiper-pagination-bullet {
 
 .description__item {
     margin-top: 30px;
+    position: relative;
+}
+
+.description__item:nth-child(1)::before, .description__item:nth-child(2)::before, .description__item:nth-child(3)::before {
+    content: "";
+    position: absolute;
+}
+
+.description__item:nth-child(1)::before {
+    background: url(./../icons/wimdow.svg);
+    top: 0;
+    left: -50px;
+    width: 32px;
+    height: 32px;
 }
 
 .description__button--left, .description__button--right {
@@ -1196,7 +1209,7 @@ button.swiper-pagination-bullet {
     line-height: 54px;
     margin: 0;
     text-align: left;
-    margin: 153px 0 70px 196px;
+    margin: 153px 0 70px 343px;
 }
 
 .principles__subtitle, .principles__item-title {
