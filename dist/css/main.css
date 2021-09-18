@@ -1169,6 +1169,8 @@ button.swiper-pagination-bullet {
 .description__list {
     margin-left: 89px;
     margin-bottom: 70px;
+    max-width: 358px;
+    width: 100%;
 }
 
 .description__item {
@@ -1313,19 +1315,21 @@ button.swiper-pagination-bullet {
     height: 100%;
     -o-object-fit: cover;
     object-fit: cover;
-    position: relative;
-    display: block;
 }
 
-.principles__image::after {
+.principles__img {
+    position: relative;
+}
+
+.principles__img::after {
     content: "";
     background: url(../img/icons/square.svg);
     position: absolute;
     width: 132px;
     height: 132px;
-    left: 0;
-    bottom: 0;
-    z-index: 22;
+    left: -26px;
+    bottom: -24px;
+    z-index: -1;
 }
 
 .principles__item {

@@ -45,6 +45,7 @@
     justify-content: center;
     margin-bottom: 130px;
   }
+
   &__list {
     margin-left: 98px;
     max-width: 312px;
@@ -55,18 +56,20 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: relative;
-    display: block;
   }
-  &__image::after {
+
+  &__img {
+    position: relative;
+  }
+  &__img::after {
     content: "";
     background: url(../img/icons/square.svg);
     position: absolute;
     width: 132px;
     height: 132px;
-    left: 0;
-    bottom: 0;
-    z-index: 22;
+    left: -26px;
+    bottom: -24px;
+    z-index: -1;
   }
 
   &__item {
