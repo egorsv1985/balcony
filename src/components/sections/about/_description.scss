@@ -58,14 +58,23 @@
   &__item:nth-child(3)::before {
     content: "";
     position: absolute;
+    width: 50px;
+    height: 50px;
+    left: -90px;
   }
 
   &__item:nth-child(1)::before {
-    background: url(./../icons/wimdow.svg);
-    top: 0;
-    left: -50px;
-    width: 32px;
-    height: 32px;
+    background: url(../img/icons/window.svg);
+    top: 44px;
+  }
+
+  &__item:nth-child(2)::before {
+    background: url(../img/icons/window2.svg);
+    top: 44px;
+  }
+  &__item:nth-child(3)::before {
+    background: url(../img/icons/window3.svg);
+    top: 26px;
   }
 
   &__button--left,
@@ -86,7 +95,20 @@
   }
   &__button--right {
     background-color: Transparent;
+    position: relative;
   }
+
+  &__button--right::after {
+    content: "";
+    position: absolute;
+    background: url(../img/icons/Arrow.svg);
+    top: 26px;
+    right: -26px;
+    width: 44px;
+    height: 16px;
+    z-index: 22;
+  }
+
   &__wrapper {
     margin: 0;
     display: grid;
