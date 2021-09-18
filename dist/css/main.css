@@ -1128,6 +1128,10 @@ button.swiper-pagination-bullet {
     line-height: 32px;
 }
 
+.description__image {
+    padding-left: 30px;
+}
+
 .description__text {
     margin-bottom: 30px;
 }
@@ -1219,6 +1223,10 @@ button.swiper-pagination-bullet {
 
 .principles__list {
     margin-left: 98px;
+}
+
+.principles__image {
+    padding-right: 30px;
 }
 
 .principles__item {
