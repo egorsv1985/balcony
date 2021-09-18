@@ -1110,6 +1110,7 @@ button.swiper-pagination-bullet {
 }
 
 .footer__wrapper {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -1127,6 +1128,10 @@ button.swiper-pagination-bullet {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.footer__about-item:first-child {
+    border-bottom: 1px solid #2F3B3FCC;
 }
 
 .footer__about-link {
@@ -1173,12 +1178,56 @@ button.swiper-pagination-bullet {
     gap: 21px;
 }
 
+.footer__contacts-item {
+    padding-left: 25px;
+    position: relative;
+}
+
+.footer__contacts-item:first-child::before {
+    content: "";
+    display: block;
+    background-image: url("./../../../img/icons/location.png");
+    background-size: 18px 20px;
+    width: 18px;
+    height: 20px;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+}
+
+.footer__contacts-item:last-child::before {
+    content: "";
+    display: block;
+    background-image: url("./../../../img/icons/Call.png");
+    background-size: 18px 20px;
+    width: 18px;
+    height: 20px;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+}
+
 .footer__contacts-link {
     font-size: 14px;
     line-height: 19px;
     font-weight: 400;
     color: #2F3B3F;
     opacity: 0.8;
+}
+
+.footer__button {
+    position: absolute;
+    right: 0;
+    bottom: -52px;
+    border: none;
+    background: #2F3B3F;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+    padding: 17px 12px;
 }
 
 .socials__title {
