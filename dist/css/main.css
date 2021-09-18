@@ -1116,6 +1116,8 @@ button.swiper-pagination-bullet {
     font-size: 40px;
     line-height: 54px;
     margin: 0;
+    text-align: left;
+    margin: 130px 0 70px 196px;
 }
 
 .description__text, .description__text-next {
@@ -1146,6 +1148,7 @@ button.swiper-pagination-bullet {
 
 .description__list {
     margin-left: 89px;
+    margin-bottom: 70px;
 }
 
 .description__item {
@@ -1166,6 +1169,7 @@ button.swiper-pagination-bullet {
     background-color: #83aead;
     color: #fff;
     border: none;
+    margin-right: 30px;
 }
 
 .description__button--right {
